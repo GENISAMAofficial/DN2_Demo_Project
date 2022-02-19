@@ -8,4 +8,4 @@ How to use:
 
 Note: if there is an error while running, try cleaning the project and then trying again (Project>Clean)
 
-This project can only be used for individual use. For permission to use outside of individual use, please contact GENISAMA LLC.
+This project can be used under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license. For permission to use outside of individual use, please contact GENISAMA LLC.
