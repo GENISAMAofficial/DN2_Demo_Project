@@ -7,3 +7,5 @@ How to use:
 2. You can then run main.java and you should be able to successfully a simple disjoint test using the GENISAMA DN.
 
 Note: if there is an error while running, try cleaning the project and then trying again (Project>Clean)
+
+This project can only be used for individual use. For permission to use outside of individual use, please contact GENISAMA LLC.
