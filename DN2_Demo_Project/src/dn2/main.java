@@ -75,7 +75,7 @@ public class main {
             newMotor = handler.Update(tempSensor, tempMotor, new boolean[] {false}, new boolean[] {false}, true);
         }
         
-        //save DN to downloads folder
+        //save DN
 //TODO you must change this file path to your own file path where you want to save your DN!
         handler.saveDN("file_path"); // For Example: Users/Steve/GENISAMA/TempDN //Note: TempDN is the saved file name
         
