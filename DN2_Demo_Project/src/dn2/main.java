@@ -77,7 +77,7 @@ public class main {
         
         //save DN to downloads folder
 //TODO you must change this file path to your own file path where you want to save your DN!
-        handler.saveDN("file_path"); // For Example: Users/Steve/GENISAMA/TempDN //Note: TempDN is saved file name
+        handler.saveDN("file_path"); // For Example: Users/Steve/GENISAMA/TempDN //Note: TempDN is the saved file name
         
         //attempt to load DN
         try {
