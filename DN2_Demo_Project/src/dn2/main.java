@@ -9,7 +9,7 @@ public class main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		int numberOfNeurons = 100; //maximum number of neurons
+		int numberOfNeurons = 11; //maximum number of neurons
         DNHandler handler = new DNHandler(numberOfNeurons, "001.txt", "002.csv", "neuronGrowth.txt"); //initialize DNHandler and pass growth tables
         handler.setFrozenDN(true); //do not learn while testing
         handler.setZtopk(new int[]{1}); //one motor predicted per update
@@ -48,6 +48,18 @@ public class main {
         sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
         sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
         sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
+//
+//        sensor.add(new float[][] {{1f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 0f}});
+//        sensor.add(new float[][] {{0f, 1f, 0f},{0f, 0f, 0f},{0f, 0f, 0f}});
+//        sensor.add(new float[][] {{0f, 0f, 1f},{0f, 0f, 0f},{0f, 0f, 0f}});
+//        sensor.add(new float[][] {{0f, 0f, 0f},{1f, 0f, 0f},{0f, 0f, 0f}});
+//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 1f, 0f},{0f, 0f, 0f}});
+//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 1f},{0f, 0f, 0f}});
+//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{1f, 0f, 0f}});
+//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 1f, 0f}});
+//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
+//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
+//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
 
         motor = new ArrayList<float[][]>();
         motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
@@ -62,6 +74,19 @@ public class main {
         motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f}});
         motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f}});
         motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
+//        
+//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
+//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
+//        motor.add(new float[][] {{1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
+//        motor.add(new float[][] {{0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
+//        motor.add(new float[][] {{0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
+//        motor.add(new float[][] {{0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f}});
+//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f}});
+//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f}});
+//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f}});
+//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f}});
+//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f}});
+//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
 
         //training
         newMotor = new ArrayList<float[][]>();
@@ -73,6 +98,9 @@ public class main {
         	tempMotor.add(motor.get(i));
         	
             newMotor = handler.Update(tempSensor, tempMotor, new boolean[] {false}, new boolean[] {false}, true);
+            
+//            System.out.println("Hidden Response: " + Arrays.toString(handler.getHiddenResponse(0))); //prints hidden response to see what neurons fire
+
         }
         
         //save DN
@@ -101,10 +129,12 @@ public class main {
         	ArrayList<float[][]> tempMotor = new ArrayList<float[][]>();
         	tempMotor.add(motor.get(i));
         	
-            newMotor = handler.Update(tempSensor, tempMotor, new boolean[] {false}, new boolean[] {false}, true);
+            newMotor = handler.Update(tempSensor, tempMotor, new boolean[] {false}, new boolean[] {false}, false);
             
             //print response
             System.out.println(Arrays.toString(newMotor.get(0)[0]));
+            
+//            System.out.println("Hidden Response: " + Arrays.toString(handler.getHiddenResponse(0))); prints hidden response to see what neurons fire
             
         }
         
