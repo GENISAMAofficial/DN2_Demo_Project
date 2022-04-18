@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static dn2.HiddenLayer.MACHINE_FLOAT_ZERO;
 //import MazeInterface.Commons;
@@ -693,7 +694,8 @@ public class DN2 implements Serializable{
 					}
 
 					receptiveField = epsilon_normalize(receptiveField, receptiveField.length, i); //epsilon normalize rf
-
+//					System.out.println(Arrays.toString(receptiveField));
+					
 					for (int w = 1; w < numMotor + 1; w++){
 						receptiveField[receptiveField.length - w] = sensorInput.get(numSensor)[0][numMotor - w]; //pain
 						receptiveField[receptiveField.length - w - 1] = sensorInput.get(numSensor+1)[0][numMotor - w]; //sweet
@@ -796,8 +798,7 @@ public class DN2 implements Serializable{
 			/// local input
 			// The where_id determines the spatial attention TODO: Ask Xiang
 			hidden[i].computeResponse(where_id, learn_flag, mode);
-
-
+			
 			// Outputs the hidden responses to the console.
 			if(DEBUG) {
 				System.out.println("HiddenResponse");
@@ -951,8 +952,8 @@ public class DN2 implements Serializable{
 			hidden[i].computeResponse(where_id, learn_flag, mode, type);
 
 			// Outputs the hidden responses to the console.
-			System.out.println("HiddenResponse");
-			displayResponse(hidden[i].getResponse1D());
+//			System.out.println("HiddenResponse");
+//			displayResponse(hidden[i].getResponse1D());
 
 			// Update Y area weights if we observe new inputs.
 			// This one does not increase the firing ages
@@ -1139,6 +1140,7 @@ public class DN2 implements Serializable{
 			//allHiddenInput[0][allHiddenSize[0]-1] = 0;
 		}
 
+//		System.out.println(Arrays.deepToString("allHiddenInput: " + allHiddenInput));
 
 		return response;
 
@@ -1996,6 +1998,7 @@ public class DN2 implements Serializable{
 
 
 	public float[] epsilon_normalize(float[] weight, int length, int column) {
+		length = length - 2 -1; //- 2 reinforcers, - 1 volume dimension
 		float[] new_weights = new float[weight.length];
 		float norm = 0;
 		float mean = 0;
@@ -2041,7 +2044,6 @@ public class DN2 implements Serializable{
 		//norm = maxVolume / ( norm);
 		//norm /= (1- volumeContribution);
 
-
 		//if(length > 50)// && nor)
 		//mNorm = norm;
 		//normalize the non-zero element
@@ -2050,7 +2052,8 @@ public class DN2 implements Serializable{
 				new_weights[i] = weight[i] / norm;
 			}
 		}
-
+		
+		length = length + 2 +1; //+ 2 reinforcers, + 1 volume dimension
 
 		norm = 0;
 		for (int i = 0; i < length; i++) {
@@ -2111,7 +2114,7 @@ public class DN2 implements Serializable{
 	}
 
 	//added by jacob for Firing Neuron Age
-	public short getFiringNeuronAge (int layer, int neuron){
+	public float getFiringNeuronAge (int layer, int neuron){
 		return hidden[layer].getFiringNeuronsAges(neuron);
 	}
 

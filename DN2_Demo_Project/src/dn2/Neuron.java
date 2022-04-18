@@ -2,6 +2,7 @@ package dn2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -36,7 +37,7 @@ public class Neuron implements Serializable{
 	private boolean mState;
 
 	/** Neuron's firing age */
-	short mFiringAge;
+	float mFiringAge;
 
 	/** Neuron's type (only applicable for Y neurons) */
 	protected int mType;
@@ -197,11 +198,13 @@ public class Neuron implements Serializable{
 	public float mNorm = 1;
 
 	//float maxVolume = 0;
-	public static float volumeContribution = 0.1f;
+	public static float volumeContribution = .2f;
 
 	public float[] mLateralWeights;
 
 	private int numMotor;
+	
+	boolean connected = true;
 
 	//construct neuron
 	// This one knows the type and input size for the neuron
@@ -379,6 +382,8 @@ public class Neuron implements Serializable{
 		mType = 0;
 		//set the neuron's firing age
 		mFiringAge = 0;
+		//tracks if it has been trained or not
+		connected = false;
 		/*
 		 * newResponse=0.0f; oldResponse=0.0f;
 		 */
@@ -593,7 +598,9 @@ public class Neuron implements Serializable{
 				System.out.println("update neuron id: " + this.getindex());
 			}
 			//increase the firing age
-			mFiringAge++;
+			//mFiringAge++;
+			mFiringAge += getnewresponse();
+
 			//update the bottom-up connections
 			if (mType == 4 || mType == 5 || mType == 6 || mType == 7) {
 				//filter the bottom-up input vector through bottom-up mask
@@ -753,7 +760,8 @@ public class Neuron implements Serializable{
 		if (winnerFlag == true) {
 			System.out.println("update neuron id: " + this.getindex());
 			//increase the firing age
-			mFiringAge++;
+			//mFiringAge++;
+			mFiringAge += getnewresponse();
 			//update the bottom-up connections
 			if (mType == 4 || mType == 5 || mType == 6 || mType == 7) {
 				//increase bottom-up synapses' ages
@@ -762,14 +770,14 @@ public class Neuron implements Serializable{
 				float[][] currentWeight = new float[sensorInput.length][];
 				float[][] currentMask = new float[sensorInput.length][];
 				float[][] currentVariance = new float[sensorInput.length][];
-				short[][] currentAge = new short[sensorInput.length][];
+				float[][] currentAge = new float[sensorInput.length][];
 				int beginIndex = 0;
 				for(int i=0; i<sensorInput.length; i++){
 					currentSensorInput[i] = new float[sensorInput[i].length];
 					currentWeight[i] = new float[sensorInput[i].length];
 					currentMask[i] = new float[sensorInput[i].length];
 					currentVariance[i] = new float[sensorInput[i].length];
-					currentAge[i] = new short[sensorInput[i].length];
+					currentAge[i] = new float[sensorInput[i].length];
 					System.arraycopy(mBottomUpWeights, beginIndex, currentWeight[i], 0, sensorInput[i].length);
 					//System.arraycopy(mBottomUpMask, beginIndex, currentMask[i], 0, sensorInput[i].length);
 					//System.arraycopy(mBottomUpVariance, beginIndex, currentVariance[i], 0, sensorInput[i].length);
@@ -1707,7 +1715,7 @@ public class Neuron implements Serializable{
 	 * @param age
 	 * @return
 	 */
-	private float[] getAmnesicLearningRate(short[] age) {
+	private float[] getAmnesicLearningRate(float[] age) {
 		//construct the result vector
 		float[] result = new float[age.length];
 		//calculate the learning rate for each element
@@ -1725,7 +1733,7 @@ public class Neuron implements Serializable{
 	 * @param age
 	 * @return
 	 */
-	private float getAmnesicLearningRate(short age) {
+	private float getAmnesicLearningRate(float age) {
 		//initialize the parameter mu and the result learning_rate
 		float mu, learning_rate;
 		//calculate mu according age
@@ -1744,7 +1752,7 @@ public class Neuron implements Serializable{
 		return learning_rate;
 	}
 
-	private float getModulationAmnesicLearningRate(int age) {
+	private float getModulationAmnesicLearningRate(float age) {
 		//initialize the parameter mu and the result learning_rate
 		float mu, learning_rate;
 		//calculate mu according age
@@ -1769,7 +1777,7 @@ public class Neuron implements Serializable{
 	 * @param age
 	 * @return
 	 */
-	private float getLearningRate(int age) {
+	private float getLearningRate(float age) {
 
 		return (1.0f / ((float) age));
 	}
@@ -1826,9 +1834,10 @@ public class Neuron implements Serializable{
 				//filter the weight vector through mask
 				//currentWeight = elementWiseProduct(currentWeight, sign(mBottomUpMask));
 				currentWeight = epsilon_normalize(currentWeight, mBottomUpWeights.length, false);
+//				System.out.println(Arrays.toString(sensorInput));
 				//calculate the response
 				bottomUpResponse += dotProduct(currentWeight, sensorInput, mBottomUpWeights.length);
-				// System.out.println("The bottom-up "+bottomUpResponse);
+//				System.out.println("The bottom-up "+bottomUpResponse);
 			}
 		} else {
 
@@ -1840,9 +1849,10 @@ public class Neuron implements Serializable{
 			float[] currentWeight = new float[mBottomUpWeights.length];
 			float[] currentSensor = new float[sensorInput.length];
 			System.arraycopy(mBottomUpWeights, 0, currentWeight, 0, mBottomUpWeights.length);
-			currentWeight = epsilon_normalize(currentWeight, mBottomUpWeights.length, true); //if change to normalize, use flag 2 (others should be deleted)
+			//System.out.println("weights:" + Arrays.toString(currentWeight));
+			currentWeight = epsilon_normalize(currentWeight, mBottomUpWeights.length, false); //if change to normalize, use flag 2 (others should be deleted)
 			System.arraycopy(sensorInput, 0, currentSensor, 0, sensorInput.length);
-			currentSensor = epsilon_normalize(currentSensor, currentSensor.length, true);
+			currentSensor = epsilon_normalize(currentSensor, currentSensor.length, false);
 			bottomUpResponse += dotProduct(currentWeight, currentSensor, mBottomUpWeights.length);
 
 			if (Float.isNaN(bottomUpResponse)){
@@ -1968,7 +1978,7 @@ public class Neuron implements Serializable{
 			bottomUpResponse *= DNHandler.computeResponseWeights[0];
 			lateralResponse *= DNHandler.computeResponseWeights[1];
 			topDownResponse *= DNHandler.computeResponseWeights[2];
-
+						
 			if (mType == 7) {
 				newResponse = (bottomUpResponse + topDownResponse + lateralResponse) /
 						((DNHandler.computeResponseWeights[0] + DNHandler.computeResponseWeights[1] + DNHandler.computeResponseWeights[2]));
@@ -1978,7 +1988,6 @@ public class Neuron implements Serializable{
 			}
 			if (mType == 5) {
 				newResponse = (bottomUpResponse + topDownResponse) / ( (DNHandler.computeResponseWeights[0] + DNHandler.computeResponseWeights[2]));
-				//System.out.println(newResponse);
 			}
 			if (mType == 4) {
 				newResponse = bottomUpResponse / DNHandler.computeResponseWeights[0];
@@ -2005,19 +2014,27 @@ public class Neuron implements Serializable{
 			if(Float.isNaN(lateralResponse)){
 				System.out.println("the "+mIndex+" Lateral bp response meets nan");
 			}
+			bottomUpResponse *= DNHandler.computeResponseWeights[0];
+			lateralResponse *= DNHandler.computeResponseWeights[1];
+			
+//			System.out.println("BU: " + bottomUpResponse + " LR: " + lateralResponse);
 
 			newResponse = (bottomUpResponse + lateralResponse) / (DNHandler.computeMotorResponseWeights[0] + DNHandler.computeMotorResponseWeights[1]);
 			if(Float.isNaN(newResponse)){
 				System.out.println("the "+mIndex+" motor bp response meets nan");
 			}
 		}
+		
+//		if (isMotor) {
+//			System.out.println("New Response: " + newResponse);
+//		}
 
 		// TODO: Add bool parameter to only do this for motor neurons
 		if (isMotor) {
 			// Equation 9.6 on page 320 of the green book:
 //			float motivatedResponse = newResponse * (1 - 0.3f * serotoninLevel + 0.1f * dopamineLevel);
 			float motivatedResponse = newResponse * (1 - serotoninMultiplier * serotoninLevel + dopamineMultiplier * dopamineLevel);
-			if (motivatedResponse < 0) motivatedResponse = 0;
+			//if (motivatedResponse < 0) motivatedResponse = 0; //Arden added - Jacob deleted due to epsilon normalize making it sensible and this is not in equation 9.6 of book.
 			newResponse = motivatedResponse;
 		}
 
@@ -2029,6 +2046,10 @@ public class Neuron implements Serializable{
 
 //		serotoninLevel = (1.0f - 0.2f) * serotoninLevel;
 //		dopamineLevel = (1.0f - 0.2f) * dopamineLevel;
+		
+		if (!connected) {
+			newResponse = -1; // if not connected, return -1 so it never wins.
+		}
 
 		return newResponse;
 //      System.out.println("response: "+newResponse);
@@ -2219,7 +2240,7 @@ public class Neuron implements Serializable{
 	 * get the firing age
 	 * @return
 	 */
-	public short getfiringage() {
+	public float getfiringage() {
 		return mFiringAge;
 	}
 
@@ -3196,5 +3217,10 @@ public class Neuron implements Serializable{
 
 	public void setDopamineMultiplier(float multiplier){
 		dopamineMultiplier = multiplier;
+	}
+
+	public void setConnected(boolean connected) {
+		this.connected = connected;
+		
 	}
 }

@@ -423,7 +423,7 @@ public class DNHandler {
 //            }
 
             //computes DN response for training or testing
-            if (frozen){
+            if (!frozen){
                 network.computeHiddenResponse(input, currentMotor, true); //always true (always learning)
             } else {
                 network.computeHiddenResponse(input, currentMotor, learn_flag);
@@ -507,7 +507,7 @@ public class DNHandler {
             }
 
             growthtable[i][8] = topk;
-            //System.out.println(topk);
+//            System.out.println(topk);
 
             if(percent > divider)
             {
@@ -518,6 +518,7 @@ public class DNHandler {
             }
         }
 //        System.out.println();
+//        System.out.println(Arrays.deepToString(growthtable));
     }
 
     //this function loads a serialized DN
@@ -776,7 +777,7 @@ public class DNHandler {
     }
 
     //added by jacob for passing to activity
-    public short getFiringNeuronAge (int layer, int neuron){
+    public float getFiringNeuronAge (int layer, int neuron){
 
         return network.getFiringNeuronAge(layer, neuron);
     }

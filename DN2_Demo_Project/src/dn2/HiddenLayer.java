@@ -386,7 +386,7 @@ public class HiddenLayer implements Serializable {
 		try {
 			PrintWriter wr_age = new PrintWriter(new File(hidden_ind + "firing age "+index+".txt"));
 			for (int i = 0; i < numNeurons; i++) {
-				wr_age.print(Integer.toString(hiddenNeurons[i].getfiringage()));
+				wr_age.print(Float.toString(hiddenNeurons[i].getfiringage()));
 				wr_age.println();
 			}
 			wr_age.close();
@@ -837,9 +837,12 @@ public class HiddenLayer implements Serializable {
 		prescreenResponse();
 
 		for(int cl=0;cl<numBoxes;cl++) {
+//			float[] tempArr = new float[usedNeurons[cl]];
 			for(int i=0;i<usedNeurons[cl]; i++){
 				float num = hiddenNeurons[numNeuronPerColumn*cl+i].computeResponse(false);
+//				tempArr[i] = num;
 			}
+//			System.out.println("pre_resp: " + Arrays.toString(tempArr));
 
 			// do the topKcompetition
 			float temp = (float)(usedNeurons[cl])/numNeuronPerColumn;
@@ -1241,7 +1244,7 @@ public class HiddenLayer implements Serializable {
 			// non-increasing order.
 			// The index is in the Pair, goes with the response ranked.
 			topKSort(sortArray, topK);
-
+						
 //			System.out.println("High top1 value of hidden: " + sortArray[0].value);
 
 			// check if the top winner has almost perfect match.
@@ -1378,6 +1381,11 @@ public class HiddenLayer implements Serializable {
 
 									// Scale response
 									tempnew = (response - loserResponse) / (r1 - loserResponse + MACHINE_FLOAT_ZERO);
+//									System.out.println("Response: " + response);
+//									System.out.println("loserResponse: " + loserResponse);
+//									System.out.println("r1: " + r1);
+//									System.out.println("tempNew: " + tempnew);
+
 									break;
 
 								// Calculate response based on winner position in topk ranking
@@ -2221,7 +2229,7 @@ public class HiddenLayer implements Serializable {
 	}
 
 	//added by jacob for getting firing ages
-	public short getFiringNeuronsAges(int i){
+	public float getFiringNeuronsAges(int i){
 		return hiddenNeurons[i].getfiringage();
 	}
 

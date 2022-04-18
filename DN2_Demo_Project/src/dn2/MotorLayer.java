@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * <h1>MotorLayer</h1>
@@ -170,6 +171,7 @@ public class MotorLayer implements Serializable {
 			// IF the neuron has a nonzero response, update its weights
 			if (motorNeurons[i].getnewresponse() >= MACHINE_FLOAT_ZERO && mConceptLearning) {
 				motorNeurons[i].hebbianLearnHidden(hiddenResponse);
+				
 			}
 		}
 	}
@@ -275,6 +277,7 @@ public class MotorLayer implements Serializable {
 			hiddenResponse[hiddenResponse.length-2] = pain;
 			hiddenResponse[hiddenResponse.length-1] = sweet;
 			// Dot product of Y response and Z bottom-up weights
+
 			motorNeurons[i].computeBottomUpResponse(hiddenResponse);
 
 			// Since Z only has bottom-up weights, assign to total response
@@ -290,6 +293,7 @@ public class MotorLayer implements Serializable {
 //
 //			System.out.print(i + ":" + motorNeurons[i].getnewresponse() + ", ");
 //		}
+//		System.out.println();
 //		System.out.println("end here");
 
 		//do top-k competition
@@ -421,7 +425,7 @@ public class MotorLayer implements Serializable {
 
 				// Calculate response based on relative goodness of match values
 				case GOODNESS_OF_MATCH:
-					if(value_top1 > value_topkplus1 ){
+					if(value_top1 > value_topkplus1 ){ //this if statement prevents division by zero.
 						tempResponse = ( copyArray[topIndex] - value_topkplus1 ) / (value_top1 - value_topkplus1 );
 					}
 					else{
@@ -598,6 +602,9 @@ public class MotorLayer implements Serializable {
 				//calculate the index of neuron
 				int index = i*width + j;
 				motorNeurons[index].setnewresponse(supervisedResponse[i][j]);
+				if (supervisedResponse[i][j] != 0) {
+					motorNeurons[index].setConnected(true);
+				}
 			}
 		}
 
@@ -715,7 +722,7 @@ public class MotorLayer implements Serializable {
 					wr_weight.print(String.format("% 2.2f", motorNeurons[i].getBottomUpWeights()[j]) + ',');
 				}
 				wr_weight.println();
-				wr_age.print(Integer.toString(motorNeurons[i].getfiringage()) + ',');
+				wr_age.print(Float.toString(motorNeurons[i].getfiringage()) + ',');
 			}
 			wr_weight.close();
 			wr_age.close();

@@ -219,7 +219,7 @@ public class PrimaryHiddenLayer implements Serializable {
 //					wr_weight.print(Integer.toString(hiddenNeurons[i][k].getindex()+1) + ' ');
 //					wr_age.print(Integer.toString(hiddenNeurons[i][k].getindex()+1) + ' ');
 //					wr_response.print(Integer.toString(hiddenNeurons[i][k].getindex()+1) + ' ');
-					wr_age.print(Integer.toString(hiddenNeurons[i][k].getfiringage()) + ' ');
+					wr_age.print(Float.toString(hiddenNeurons[i][k].getfiringage()) + ' ');
 					wr_response.print(String.format("% .3f",hiddenNeurons[i][k].getnewresponse()) + ' ');
 					if(hiddenNeurons[i][k].getState()){
 						wr_flag.print(Integer.toString(1) + ' ');
