@@ -14,7 +14,6 @@ InhibitoryNeuron.java: Java class. Used for Lateral inhibition of the hidden lay
 
 MotorLayer.java: Java class. It receives motor input from DN2 class, process the motor input for Hiddenlayer class' computations, and receives HiddenLayer inputs for motor response computation. 
  
-
 Neuron.java: Java class. Does response computations and top-k competition at an individual neuron level.
 
 Pair.java: Java class. Used for Top-k competition of the neurons. It contains a value and an index.
