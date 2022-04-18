@@ -9,7 +9,8 @@ public class main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		int numberOfNeurons = 11; //maximum number of neurons
+		int time = 0; //logs the timestep we are one
+		int numberOfNeurons = 11; //maximum number of neurons (this can and should be increased with larger data)
         DNHandler handler = new DNHandler(numberOfNeurons, "001.txt", "002.csv", "neuronGrowth.txt"); //initialize DNHandler and pass growth tables
         handler.setFrozenDN(true); //do not learn while testing
         handler.setZtopk(new int[]{1}); //one motor predicted per update
@@ -37,6 +38,7 @@ public class main {
         
         //set training data
         sensor = new ArrayList<float[][]>();
+        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 0f}}); //burn first sensor for initialization
         sensor.add(new float[][] {{1f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 0f}});
         sensor.add(new float[][] {{0f, 1f, 0f},{0f, 0f, 0f},{0f, 0f, 0f}});
         sensor.add(new float[][] {{0f, 0f, 1f},{0f, 0f, 0f},{0f, 0f, 0f}});
@@ -47,24 +49,11 @@ public class main {
         sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 1f, 0f}});
         sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
         sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
-        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
-//
-//        sensor.add(new float[][] {{1f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 0f}});
-//        sensor.add(new float[][] {{0f, 1f, 0f},{0f, 0f, 0f},{0f, 0f, 0f}});
-//        sensor.add(new float[][] {{0f, 0f, 1f},{0f, 0f, 0f},{0f, 0f, 0f}});
-//        sensor.add(new float[][] {{0f, 0f, 0f},{1f, 0f, 0f},{0f, 0f, 0f}});
-//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 1f, 0f},{0f, 0f, 0f}});
-//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 1f},{0f, 0f, 0f}});
-//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{1f, 0f, 0f}});
-//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 1f, 0f}});
-//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
-//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
-//        sensor.add(new float[][] {{0f, 0f, 0f},{0f, 0f, 0f},{0f, 0f, 1f}});
 
         motor = new ArrayList<float[][]>();
-        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
-        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
-        motor.add(new float[][] {{1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
+        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}}); //burn first motor for initialization
+        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}}); //there is not previous sensor, so train unknown
+        motor.add(new float[][] {{1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}}); //motor links to previous sensor
         motor.add(new float[][] {{0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
         motor.add(new float[][] {{0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
         motor.add(new float[][] {{0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f}});
@@ -74,19 +63,6 @@ public class main {
         motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f}});
         motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f}});
         motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
-//        
-//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
-//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
-//        motor.add(new float[][] {{1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
-//        motor.add(new float[][] {{0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
-//        motor.add(new float[][] {{0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}});
-//        motor.add(new float[][] {{0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f}});
-//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f}});
-//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f}});
-//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f}});
-//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f}});
-//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f}});
-//        motor.add(new float[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f}});
 
         //training
         newMotor = new ArrayList<float[][]>();
@@ -101,6 +77,9 @@ public class main {
             
 //            System.out.println("Hidden Response: " + Arrays.toString(handler.getHiddenResponse(0))); //prints hidden response to see what neurons fire
 
+          System.out.println(time + ": Trained Motor: " + Arrays.toString(newMotor.get(0)[0]));
+            
+            time++;
         }
         
         //save DN
@@ -121,6 +100,7 @@ public class main {
 		}
         
         //complete disjoint testing
+        time = 0; // reset time for testing
         newMotor = new ArrayList<float[][]>();
         for (int i = 0; i < sensor.size(); i++) {
         	ArrayList<float[][]> tempSensor = new ArrayList<float[][]>();
@@ -131,11 +111,12 @@ public class main {
         	
             newMotor = handler.Update(tempSensor, tempMotor, new boolean[] {false}, new boolean[] {false}, false);
             
-            //print response
-            System.out.println(Arrays.toString(newMotor.get(0)[0]));
-            
 //            System.out.println("Hidden Response: " + Arrays.toString(handler.getHiddenResponse(0))); prints hidden response to see what neurons fire
             
+          //print predicted response
+            System.out.println(time + ": Predicted Motor: " + Arrays.toString(newMotor.get(0)[0]));
+            
+            time++;
         }
         
 		
